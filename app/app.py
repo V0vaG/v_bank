@@ -41,27 +41,37 @@ def register():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
+        name = request.form.get('name')
+        balance = float(request.form.get('balance', 0))  # Default to 0 if not provided
+        weekly_pay = float(request.form.get('weekly_pay', 0))  # Default to 0 if not provided
+        overdraft = float(request.form.get('overdraft', 0))  # Default to 0 if not provided
+        interest = float(request.form.get('interest', 0))  # Default to 0 if not provided
         groups = request.form.get('groups').split(',')
 
-        # If there are no users, make the first user an admin
+        # Determine role
         if len(users) == 0:
-            role = 'admin'
+            role = 'admin'  # First user is admin
         else:
-            role = request.form.get('role') if 'role' in request.form else 'user'
+            role = request.form.get('role', 'user')
 
         # Check if username already exists
         if any(user['username'] == username for user in users):
             flash(f"Username '{username}' already exists.", "danger")
             return redirect(url_for('register'))
 
-        # Hash the password before saving it
+        # Hash the password before saving
         hashed_password = generate_password_hash(password)
 
         # Create new user object
         new_user = {
             'username': username,
             'password': hashed_password,
-            'kind': role,  # Use the selected or auto-assigned role (user/admin)
+            'name': name,
+            'balance': balance,
+            'weekly_pay': weekly_pay,
+            'overdraft': overdraft,
+            'interest': interest,
+            'kind': role,  # Role: user or admin
             'groups': groups
         }
 
@@ -70,13 +80,12 @@ def register():
         with open(users_file, 'w') as f:
             json.dump(users, f, indent=4)
 
-        flash(f"User created successfully as {role}!", "success")
+        flash(f"User '{name}' created successfully as {role}!", "success")
         return redirect(url_for('show_login'))
 
-    # Check if accessed from admin area or login page
-    show_role_selection = 'admin_area' in request.args  # Flag for role dropdown
-    back_url = url_for('admin_area') if 'admin_area' in request.args else url_for('show_login')  # Determine where to go back to
-    
+    show_role_selection = 'admin_area' in request.args  # Role dropdown flag
+    back_url = url_for('admin_area') if 'admin_area' in request.args else url_for('show_login')
+
     return render_template('register.html', show_role_selection=show_role_selection, back_url=back_url)
 
 
@@ -98,11 +107,18 @@ def login():
     # Check if the user exists and password matches
     if user and check_password_hash(user['password'], password):
         session['active_user'] = username  # Store the username in the session
+        
+        # Check if the user is an admin
+        if user['kind'] == 'admin':
+            flash("Login successful! Welcome, Admin.", "success")
+            return redirect(url_for('admin_area'))
+        
         flash("Login successful!", "success")
         return redirect(url_for('home'))
 
     flash("Invalid username or password.", "danger")
     return redirect(url_for('show_login'))
+
 
 @app.route('/')
 def show_login():

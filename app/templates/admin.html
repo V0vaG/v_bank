@@ -12,8 +12,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
             margin: 0;
+            padding: 20px;
         }
 
         h1 {
@@ -30,6 +30,7 @@
 
         table {
             width: 100%;
+            max-width: 1200px;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
@@ -72,7 +73,6 @@
             gap: 20px;
         }
 
-        /* Notification Popup styles */
         .popup {
             position: fixed;
             bottom: -100px;
@@ -106,54 +106,23 @@
         }
     </style>
     <script>
-        // Function to show the popup notification
         function showPopup(message, isError = false) {
             const popup = document.getElementById('notificationPopup');
             const popupMessage = document.getElementById('popupMessage');
             popupMessage.innerText = message;
             
-            // If error, add the error class
             if (isError) {
                 popup.classList.add('error');
             } else {
                 popup.classList.remove('error');
             }
 
-            // Show the popup
             popup.classList.add('show');
-
-            // Automatically hide the popup after 3 seconds
             setTimeout(() => {
                 popup.classList.remove('show');
             }, 3000);
         }
 
-        // Function to handle settings and show the popup
-        function saveSettingsAndGoHome(event) {
-            event.preventDefault(); // Prevent default form submission
-
-            // Submit the form via JavaScript
-            const form = document.getElementById('settingsForm');
-            const formData = new FormData(form);
-
-            fetch(form.action, {
-                method: 'POST',
-                body: formData
-            }).then(response => {
-                if (response.ok) {
-                    // Show success popup
-                    showPopup('Settings saved successfully!');
-                    setTimeout(() => {
-                        window.location.href = "{{ url_for('home') }}"; // Redirect to home after 3 seconds
-                    }, 3000);
-                } else {
-                    // Show error popup
-                    showPopup('Failed to save settings.', true);
-                }
-            });
-        }
-
-        // Close the popup when clicking on the close button
         function closePopup() {
             document.getElementById('notificationPopup').classList.remove('show');
         }
@@ -163,52 +132,52 @@
     <h1>Admin Area</h1>
     <p>Welcome, admin!</p>
 
-    <h2>User List and Topics Created</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Number of Topics Created</th>
-            <th>Actions</th> <!-- New column for actions -->
-        </tr>
-    </thead>
-    <tbody>
-        {% for user, topic_count in user_data %}
-        <tr>
-            <td>{{ user.username }}</td>
-            <td>{{ user.kind }}</td>
-            <td>{{ topic_count }}</td>
-            <td>
-                <!-- Add delete button for each user -->
-                <form action="{{ url_for('delete_user', username=user.username) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete user {{ user.username }}?');">
-                    <button type="submit" class="button delete-button">Delete User</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
+    <h2>All User Data</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Balance</th>
+                <th>Weekly Pay</th>
+                <th>Overdraft</th>
+                <th>Interest Rate (%)</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user, topic_count in user_data %}
+            <tr>
+                <td>{{ user.name }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.balance }}</td>
+                <td>{{ user.weekly_pay }}</td>
+                <td>{{ user.overdraft }}</td>
+                <td>{{ user.interest }}</td>
+                <td>{{ user.kind }}</td>
+                <td>
+                    <form action="{{ url_for('delete_user', username=user.username) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete user {{ user.username }}?');">
+                        <button type="submit" class="button delete-button">Delete User</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     <div class="button-container">
-        <!-- Button to add user -->
         <a href="{{ url_for('register', admin_area=True) }}" class="button">Add User</a>
     </div>
 
-    <!-- Combined form for saving settings and going back home -->
     <form id="settingsForm" action="{{ url_for('toggle_registration') }}" method="POST">
         <label for="allow_registration">Allow External User Registration</label>
-        <input type="checkbox" id="allow_registration" name="allow_registration" 
-               {% if allow_registration %}checked{% endif %}>
-
+        <input type="checkbox" id="allow_registration" name="allow_registration" {% if allow_registration %}checked{% endif %}>
         <div class="button-container">
-            <!-- Button to save settings and go back to home -->
-            <button type="submit" onclick="saveSettingsAndGoHome(event)">Save Settings and Go Back to Home</button>
+            <button type="submit">Save Settings</button>
         </div>
     </form>
 
-    <!-- Popup notification -->
     <div id="notificationPopup" class="popup">
         <span id="popupMessage"></span>
         <button class="close-btn" onclick="closePopup()">✖</button>
