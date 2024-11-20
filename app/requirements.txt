@@ -1,0 +1,7 @@
+Flask~=3.0.2
+Jinja2
+python-dotenv~=1.0.1
+requests~=2.31.0
+gunicorn
+boto3~=1.34.56
+prometheus-flask-exporter

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TopiX Login</title>
+    <style>
+        /* General reset and layout */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Container styling */
+        .container {
+            background-color: white;
+            padding: 30px 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 400px;
+        }
+
+        /* Heading style */
+        h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* Form styling */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        /* Button styling */
+        .button {
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            width: 100%;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .button:active {
+            background-color: #3e8e41;
+            transform: translateY(0);
+        }
+
+        /* Forgot password link */
+        .forgot-password {
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .forgot-password a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        /* Create User/Admin button */
+        .create-account {
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+
+        .create-account a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .create-account a:hover {
+            text-decoration: underline;
+        }
+
+        /* Notification Popup styles */
+        .popup {
+            position: fixed;
+            bottom: -100px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: all 0.5s ease-in-out;
+            z-index: 1000;
+        }
+
+        .popup.show {
+            bottom: 20px;
+            opacity: 1;
+        }
+
+        .popup.error {
+            background-color: #f44336;
+        }
+
+        .close-btn {
+            background-color: transparent;
+            color: white;
+            border: none;
+            font-size: 16px;
+            margin-left: 15px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        // Function to show the popup notification
+        function showPopup(message, isError = false) {
+            const popup = document.getElementById('notificationPopup');
+            const popupMessage = document.getElementById('popupMessage');
+            popupMessage.innerText = message;
+            
+            // If error, add the error class
+            if (isError) {
+                popup.classList.add('error');
+            } else {
+                popup.classList.remove('error');
+            }
+
+            // Show the popup
+            popup.classList.add('show');
+
+            // Automatically hide the popup after 3 seconds
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 3000);
+        }
+
+        // Example usage of showing popup (simulating flash messages)
+        document.addEventListener('DOMContentLoaded', function() {
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  showPopup("{{ message }}", "{{ category }}" === "danger");
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+        });
+
+        // Close the popup when clicking on the close button
+        function closePopup() {
+            document.getElementById('notificationPopup').classList.remove('show');
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Login to TopiX</h1>
+
+        <form action="{{ url_for('login') }}" method="POST">
+            <input type="text" name="username" placeholder="Username" required autofocus>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit" class="button">Login</button>
+        </form>
+        
+        <div class="create-account">
+            {% if allow_registration %}
+                <a href="{{ url_for('register') }}">Register New User</a>
+            {% endif %}
+        </div>
+        
+
+        <div class="create-account">
+            {% if no_users_exist %}
+                <a href="{{ url_for('register') }}">Create Admin Account</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Popup notification -->
+    <div id="notificationPopup" class="popup">
+        <span id="popupMessage"></span>
+        <button class="close-btn" onclick="closePopup()">✖</button>
+    </div>
+</body>
+</html>

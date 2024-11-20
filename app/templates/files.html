@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Files</title>
+    <style>
+        /* General reset and layout */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Main Container */
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        .delete-button {
+            background-color: #f44336;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: #e53935;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .button, .upload-button {
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .button:hover, .upload-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Hidden File Input */
+        .custom-upload-button {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Manage Files for Topic: {{ topic['topic'] }}</h1>
+
+        <!-- Files Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>File Size</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in files %}
+                <tr>
+                    <td>{{ file.name }}</td>
+                    <td>{{ file.size }} KB</td>
+                    <td>
+                        <form action="{{ url_for('delete_file', folder=folder, topic_id=topic['topic_id'], filename=file.name) }}" method="POST">
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Back and Upload Buttons -->
+        <div class="button-container">
+            <a href="{{ url_for('edit_topic', folder=folder, id=topic['topic_id']) }}" class="button">Back</a>
+
+            <!-- Upload Form -->
+            <form id="upload-form" action="{{ url_for('manage_files', folder=folder, id=topic['topic_id']) }}" method="POST" enctype="multipart/form-data">
+                <label id="upload-label" for="upload-files" class="upload-button">Upload File</label>
+                <input type="file" id="upload-files" name="files" class="custom-upload-button" multiple onchange="document.getElementById('upload-form').submit();">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Trigger file input when the custom upload button is clicked
+        document.getElementById('upload-label').addEventListener('click', function() {
+            document.getElementById('upload-files').click();
+        });
+    </script>
+</body>
+</html>

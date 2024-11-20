@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TopiX</title>
+    <style>
+        /* General reset and layout */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Container styling */
+        .container {
+            background-color: white;
+            padding: 30px 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        /* Heading style */
+        h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* List and buttons styling */
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 15px;
+        }
+
+        .button {
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .button:active {
+            background-color: #3e8e41;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to TopiX</h1>
+        <h2 id="host" style="color:green;">Host: {{ host }}, ver: {{ version }}, user: {{ user }}</h2>
+        <ul>
+            <li><a href="{{ url_for('list_topics') }}" class="button">List All Topics</a></li>
+            <li><a href="{{ url_for('create_topic') }}" class="button">Create a New Topic</a></li>
+            <li><a href="{{ url_for('search_topic') }}" class="button">Search Topics</a></li>
+            {% if is_admin %}
+                <li><a href="{{ url_for('admin_area') }}" class="button" style="background-color: red;">Admin Area</a></li>
+            {% endif %}
+            <!-- Log Out Button -->
+            <li><a href="{{ url_for('logout') }}" class="button" style="background-color: #FF6347;">Log Out</a></li>
+        </ul>
+    </div>
+</body>
+</html>

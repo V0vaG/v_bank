@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Topic</title>
+    <style>
+        /* General reset and layout */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Container styling */
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100vw;
+            max-width: 600px;
+            margin: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Heading style */
+        h1 {
+            font-size: 2rem;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Form group layout */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        /* Label styling */
+        label {
+            font-size: 1.1rem;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Input and Textarea styling */
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            border-color: #4CAF50;
+        }
+
+        textarea {
+            font-family: 'Courier New', Courier, monospace;
+            resize: vertical;
+        }
+
+        /* Button styling */
+        .button-container {
+            text-align: center;
+        }
+
+        .button {
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-right: 10px;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .button:active {
+            background-color: #3e8e41;
+            transform: translateY(0);
+        }
+
+        .cancel-button {
+            padding: 12px 25px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-block;
+        }
+
+        .cancel-button:hover {
+            background-color: #e53935;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            input[type="text"], textarea {
+                font-size: 0.9rem;
+            }
+
+            .button, .cancel-button {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create a New Topic</h1>
+        <form id="create-topic-form" action="{{ url_for('create_topic') }}" method="POST">
+            <!-- Topic Name -->
+            <div class="form-group">
+                <label for="new_topic">Topic Name:</label>
+                <input type="text" id="new_topic" name="new_topic" required>
+            </div>
+
+            <!-- Topic Data -->
+            <div class="form-group">
+                <label for="new_data">Topic Data:</label>
+                <textarea id="new_data" name="new_data" rows="10" required></textarea>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-container">
+                <button type="submit" class="button">Create Topic</button>
+                <a href="{{ url_for('home') }}" class="cancel-button">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

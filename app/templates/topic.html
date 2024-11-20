@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic Details</title>
+    <style>
+        /* General reset and layout */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Container styling */
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Heading style */
+        h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Labels row */
+        .labels-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        /* Preformatted text styling */
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 1rem;
+            flex-grow: 1; 
+            margin-bottom: 20px;
+        }
+
+        /* Button styling */
+        .button, .cancel-button {
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 10px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .cancel-button {
+            background-color: #f44336;
+        }
+
+        .cancel-button:hover {
+            background-color: #e53935;
+            transform: translateY(-2px);
+        }
+
+        /* Button container for layout */
+        .button-container {
+            display: flex;
+            justify-content: flex-start;
+            padding: 10px 0;
+        }
+
+        /* File list */
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 20px 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        a.file-link {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a.file-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Topic: {{ topic.topic }}</h1>
+        
+        <!-- Labels in a row -->
+        <div class="labels-row">
+            <p><strong>ID:</strong> {{ topic.topic_id }}</p>
+            <p><strong>Creation Date:</strong> {{ topic.creation_date }}</p>
+            <p><strong>Edition Date:</strong> {{ topic.edition_date }}</p>
+        </div>
+
+        <!-- Preformatted text -->
+        <pre><code>{{ topic_content | safe }}</code></pre>
+
+        <h3>Uploaded Files:</h3>
+        <ul>
+            {% if files %}
+                {% for file in files %}
+                    <li>
+                        <a href="{{ url_for('download_file', topic_id=topic.topic_id, filename=file) }}" class="file-link">{{ file }}</a>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li>No files uploaded</li>
+            {% endif %}
+        </ul>
+
+        <div class="button-container">
+            <a href="{{ url_for('list_topics') }}" class="button cancel-button">Back to List</a>
+            {% if is_admin or is_author %}
+                <a href="{{ url_for('edit_topic', folder=folder, id=topic.topic_id) }}" class="button">Edit</a>
+            {% endif %}
+        </div>
+   
