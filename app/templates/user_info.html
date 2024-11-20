@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Info</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome, {{ user.name }}</h1>
+    <p>Here is your account information:</p>
+    <table>
+        <tr>
+            <th>Field</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Username</td>
+            <td>{{ user.username }}</td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>{{ user.name }}</td>
+        </tr>
+        <tr>
+            <td>Balance</td>
+            <td>{{ user.balance }}</td>
+        </tr>
+        <tr>
+            <td>Weekly Pay</td>
+            <td>{{ user.weekly_pay }}</td>
+        </tr>
+        <tr>
+            <td>Overdraft</td>
+            <td>{{ user.overdraft }}</td>
+        </tr>
+        <tr>
+            <td>Interest</td>
+            <td>{{ user.interest }}</td>
+        </tr>
+    </table>
+    <a href="{{ url_for('logout') }}">Logout</a>
+</body>
+</html>

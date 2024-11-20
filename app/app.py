@@ -21,6 +21,12 @@ if not os.path.exists(USERS_FILE):
     with open(USERS_FILE, 'w') as f:
         json.dump([], f)
 
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session.pop('active_user', None)
+    flash("You have been logged out.", "success")
+    return redirect(url_for('show_login'))
+
 # Decorator for login-required routes
 def login_required(f):
     @wraps(f)
@@ -30,6 +36,39 @@ def login_required(f):
             return redirect(url_for('show_login'))
         return f(*args, **kwargs)
     return wrap
+
+@app.route('/update_balance/<username>', methods=['POST'])
+@login_required
+def update_balance(username):
+    # Ensure the logged-in user is an admin
+    active_user = session.get('active_user')
+
+    with open(USERS_FILE, 'r') as f:
+        users = json.load(f)
+
+    admin = next((u for u in users if u['username'] == active_user and u['kind'] == 'admin'), None)
+    if not admin:
+        flash("You do not have permission to perform this action.", "danger")
+        return redirect(url_for('admin_area'))
+
+    # Find the user to update
+    user_to_update = next((u for u in users if u['username'] == username), None)
+    if not user_to_update:
+        flash("User not found.", "danger")
+        return redirect(url_for('admin_area'))
+
+    # Update the user's balance
+    try:
+        amount = float(request.form.get('amount', 0))
+        user_to_update['balance'] += amount
+        with open(USERS_FILE, 'w') as f:
+            json.dump(users, f, indent=4)
+
+        flash(f"Updated balance for {username}.", "success")
+    except ValueError:
+        flash("Invalid amount entered.", "danger")
+
+    return redirect(url_for('admin_area'))
 
 @app.route('/')
 def show_login():
@@ -99,10 +138,36 @@ def login():
     user = next((u for u in users if u['username'] == username), None)
     if user and check_password_hash(user['password'], password):
         session['active_user'] = username
-        return redirect(url_for('admin_area' if user['kind'] == 'admin' else 'home'))
+        
+        # Redirect based on user role
+        if user['kind'] == 'admin':
+            flash("Login successful! Welcome, Admin.", "success")
+            return redirect(url_for('admin_area'))
+        
+        flash("Login successful!", "success")
+        return redirect(url_for('user_info'))  # Redirect users to their info page
 
     flash("Invalid username or password.", "danger")
     return redirect(url_for('show_login'))
+
+@app.route('/user', methods=['GET'])
+@login_required
+def user_info():
+    # Get the logged-in username
+    username = session.get('active_user')
+
+    # Load users from the JSON file
+    with open(USERS_FILE, 'r') as f:
+        users = json.load(f)
+
+    # Find the logged-in user's data
+    user = next((u for u in users if u['username'] == username), None)
+    if not user:
+        flash("User not found.", "danger")
+        return redirect(url_for('show_login'))
+
+    # Render the user info page
+    return render_template('user_info.html', user=user)
 
 @app.route('/admin', methods=['GET'])
 @login_required
@@ -138,12 +203,6 @@ def edit_user(username):
         return redirect(url_for('admin_area'))
 
     return render_template('edit_user.html', user=user_to_edit)
-
-@app.route('/logout')
-def logout():
-    session.pop('active_user', None)
-    flash("You have been logged out.", "success")
-    return redirect(url_for('show_login'))
 
 if __name__ == '__main__':
     app.run(debug=True)
