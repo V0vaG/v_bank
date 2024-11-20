@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Schedule</title>
+</head>
+<body>
+    <h1>Update Schedule Task Time</h1>
+    <form method="POST" action="{{ url_for('update_schedule') }}">
+        <label for="schedule_task_time">Schedule Task Time (HH:MM):</label>
+        <input type="text" id="schedule_task_time" name="schedule_task_time" value="{{ current_time }}" required>
+        <button type="submit">Update</button>
+    </form>
+    <br>
+    <a href="{{ url_for('admin_area') }}">Back to Admin Area</a>
+</body>
+</html>

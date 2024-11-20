@@ -36,44 +36,45 @@
             background-color: #f4f4f4;
         }
 
-        form {
-            display: inline;
-        }
-
-        input[type="number"] {
-            width: 80px;
-        }
-
-        button, .logout-button {
+        button, .logout-button, .add-user-button {
             background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 10px 20px;
             cursor: pointer;
+            font-size: 16px;
         }
 
-        button:hover, .logout-button:hover {
+        button:hover, .logout-button:hover, .add-user-button:hover {
             background-color: #45a049;
         }
 
         .logout-button {
             background-color: #f44336;
-            padding: 10px 20px;
-            font-size: 16px;
         }
 
         .logout-button:hover {
             background-color: #d32f2f;
+        }
+
+        .add-user-button {
+            margin-left: 20px;
         }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>Admin Area</h1>
-        <!-- Logout button -->
-        <form action="{{ url_for('logout') }}" method="POST">
-            <button class="logout-button" type="submit">Logout</button>
-        </form>
+        <div>
+            <!-- Add User button -->
+            <a href="{{ url_for('register') }}">
+                <button class="add-user-button">Add User</button>
+            </a>
+            <!-- Logout button -->
+            <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
+                <button class="logout-button" type="submit">Logout</button>
+            </form>
+        </div>
     </div>
 
     <table>

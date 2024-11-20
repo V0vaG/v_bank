@@ -8,19 +8,19 @@
     <form method="POST" action="{{ url_for('edit_user', username=user.username) }}">
         <label>Name:</label>
         <input type="text" name="name" value="{{ user.name }}" required>
+        <br>
         <label>Balance:</label>
-        <input type="number" name="balance" value="{{ user.balance }}" step="0.01" required>
+        <input type="text" name="balance" value="{{ user.balance }}">
+        <br>
         <label>Weekly Pay:</label>
-        <input type="number" name="weekly_pay" value="{{ user.weekly_pay }}" step="0.01" required>
+        <input type="number" name="weekly_pay" value="{{ user.weekly_pay }}" step="any">
+        <br>
         <label>Overdraft:</label>
-        <input type="number" name="overdraft" value="{{ user.overdraft }}" step="0.01">
+        <input type="number" name="overdraft" value="{{ user.overdraft }}" step="any">
+        <br>
         <label>Interest:</label>
-        <input type="number" name="interest" value="{{ user.interest }}" step="0.01">
-        <label>Role:</label>
-        <select name="role">
-            <option value="user" {% if user.kind == 'user' %}selected{% endif %}>User</option>
-            <option value="admin" {% if user.kind == 'admin' %}selected{% endif %}>Admin</option>
-        </select>
+        <input type="number" name="interest" value="{{ user.interest }}" step="any">
+        <br>
         <button type="submit">Save</button>
     </form>
 </body>
