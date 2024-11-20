@@ -43,3 +43,5 @@ def generate_topic_id(data_dir):
             break
 
     return str(next_topic_id)
+
+

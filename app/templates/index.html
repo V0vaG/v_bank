@@ -73,9 +73,6 @@
         <h1>Welcome to TopiX</h1>
         <h2 id="host" style="color:green;">Host: {{ host }}, ver: {{ version }}, user: {{ user }}</h2>
         <ul>
-            <li><a href="{{ url_for('list_topics') }}" class="button">List All Topics</a></li>
-            <li><a href="{{ url_for('create_topic') }}" class="button">Create a New Topic</a></li>
-            <li><a href="{{ url_for('search_topic') }}" class="button">Search Topics</a></li>
             {% if is_admin %}
                 <li><a href="{{ url_for('admin_area') }}" class="button" style="background-color: red;">Admin Area</a></li>
             {% endif %}
