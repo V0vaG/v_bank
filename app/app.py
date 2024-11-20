@@ -22,6 +22,7 @@ HOME_DIR = os.path.expanduser("~")
 FILES_PATH = os.path.join(HOME_DIR, "script_files", alias)
 DATA_DIR = os.path.join(FILES_PATH, "data")
 USERS_FILE = os.path.join(DATA_DIR, 'users.json')
+scheduler = "22:49"
 
 # Scheduler flag (persistent)
 scheduler_started = False
@@ -43,7 +44,7 @@ def start_scheduler():
 # Function to handle scheduling
 def schedule_task():
     schedule.clear()  # Clear existing jobs to avoid duplication
-    schedule.every().day.at("22:04:20").do(update_all_balances)
+    schedule.every().day.at(scheduler).do(update_all_balances)
 
     # Log scheduled jobs
     for job in schedule.jobs:
