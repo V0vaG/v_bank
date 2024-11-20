@@ -21,6 +21,11 @@
         <label>Interest:</label>
         <input type="number" name="interest" value="{{ user.interest }}" step="any">
         <br>
+        <label>Role:</label>
+        <select name="role">
+            <option value="user" {% if user.kind == 'user' %}selected{% endif %}>User</option>
+            <option value="admin" {% if user.kind == 'admin' %}selected{% endif %}>Admin</option>
+        </select>
         <button type="submit">Save</button>
     </form>
 </body>

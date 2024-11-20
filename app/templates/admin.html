@@ -20,6 +20,16 @@
             margin: 0;
         }
 
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="text"], button {
+            font-size: 16px;
+            padding: 5px 10px;
+            margin-right: 10px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -36,16 +46,14 @@
             background-color: #f4f4f4;
         }
 
-        button, .logout-button, .add-user-button {
+        button {
             background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 10px 20px;
             cursor: pointer;
-            font-size: 16px;
         }
 
-        button:hover, .logout-button:hover, .add-user-button:hover {
+        button:hover {
             background-color: #45a049;
         }
 
@@ -56,26 +64,24 @@
         .logout-button:hover {
             background-color: #d32f2f;
         }
-
-        .add-user-button {
-            margin-left: 20px;
-        }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>Admin Area</h1>
-        <div>
-            <!-- Add User button -->
-            <a href="{{ url_for('register') }}">
-                <button class="add-user-button">Add User</button>
-            </a>
-            <!-- Logout button -->
-            <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
-                <button class="logout-button" type="submit">Logout</button>
-            </form>
-        </div>
+        <form action="{{ url_for('logout') }}" method="POST">
+            <button class="logout-button" type="submit">Logout</button>
+        </form>
     </div>
+
+    <h2>Current App Time: {{ current_time }}</h2>
+
+    <!-- Update Schedule Task Time -->
+    <form method="POST" action="{{ url_for('update_schedule_time') }}">
+        <label for="schedule_task_time">Schedule Task Time (HH:MM):</label>
+        <input type="text" id="schedule_task_time" name="schedule_task_time" value="{{ schedule_task_time }}" required>
+        <button type="submit">Update</button>
+    </form>
 
     <table>
         <thead>
